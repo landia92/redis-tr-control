@@ -8,11 +8,8 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
-@EnableRedisRepositories // Spring Data Redis 리포지토리를 활성화
-// 리포지토리 인터페이스 정의와 사용 가능
 public class RedisConfig {
     // application.properties에서 가져옴
     @Value("${spring.data.redis.host}") // Redis 서버 호스트

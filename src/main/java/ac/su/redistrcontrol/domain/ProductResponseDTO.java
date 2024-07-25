@@ -7,11 +7,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
 @AllArgsConstructor
 public class ProductResponseDTO {
-    private Long id;
+    private String id;
     private String name;
     private int price;
 
@@ -24,20 +23,22 @@ public class ProductResponseDTO {
 
     public static ProductResponseDTO fromProduct(Product product) {
         return new ProductResponseDTO(
-                product.getId(),
+                "/products/" + product.getId(),
                 product.getName(),
                 product.getPrice(),
-                product.getSalesQuantity(),
                 product.getStockQuantity(),
-                CategoryResponseDTO.fromCategory(product.getCategory())
+                product.getSalesQuantity(),
+//            CategoryResponseDTO.fromCategory(product.getCategory())
+//            CategoryResponseDTO.fromCategoryWithParentsList(product.getCategory())
+                CategoryResponseDTO.fromCategoryWithParentsUrlList(product.getCategory())
         );
     }
 
     public static List<ProductResponseDTO> fromProducts(List<Product> products) {
-        List<ProductResponseDTO> productDTOS = new ArrayList<>();
-        for (Product product : products) {
-            productDTOS.add(fromProduct(product));
+        List<ProductResponseDTO> productDTOs = new ArrayList<>();
+        for (Product product: products) {
+            productDTOs.add(fromProduct(product));
         }
-        return productDTOS;
+        return productDTOs;
     }
 }

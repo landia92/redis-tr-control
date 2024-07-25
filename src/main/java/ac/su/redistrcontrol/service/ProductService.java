@@ -19,39 +19,31 @@ public class ProductService {
     }
 
     public Optional<Product> getProductById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            return product;
-        }
-        else {
-            return Optional.empty();
-        }
+        return productRepository.findById(id);
     }
 
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product) {  // create 동작 리턴은 Optional 이 아님!
         return productRepository.save(product);
     }
 
     public Optional<Product> updateProduct(Long id, Product product) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isPresent()) {
-            Product newProduct = new Product();
-            newProduct.setName(product.getName());
-            newProduct.setPrice(product.getPrice());
-            productRepository.save(newProduct);
-            return Optional.of(newProduct);
-        }
-        else {
-            return Optional.empty();
-        }
+        return productRepository.findById(id)
+                .map(existingProduct -> {
+                    existingProduct.setName(product.getName());
+                    existingProduct.setPrice(product.getPrice());
+                    existingProduct.setStockQuantity(product.getStockQuantity());
+                    existingProduct.setSalesQuantity(product.getSalesQuantity());
+                    existingProduct.setCategory(product.getCategory());
+                    return productRepository.save(existingProduct);
+                });
     }
 
     public boolean deleteProduct(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        if(product.isPresent()) {
-            productRepository.delete(product.get());
-            return true;
-        }
-        return false;
+        return productRepository.findById(id)
+                .map(product -> {
+                    productRepository.delete(product);
+                    return true;
+                })
+                .orElse(false);
     }
 }

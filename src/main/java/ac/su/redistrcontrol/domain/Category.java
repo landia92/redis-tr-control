@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Getter @Setter
@@ -41,27 +42,33 @@ public class Category {
         Collections.reverse(parents);
         return parents;
     }
+
+    @JsonIgnore
+    public List<Map<String, String>> getParentsMapAsc() {
+        // id 번호가 오름차순 -> 카테고리 계층구조가 상위에서 하위로
+        List<Map<String, String>> parents = new ArrayList<>();
+        // 상위 항목만 검색해서 리스트 완성하기!
+        Category parentPointer = this.parent;
+        while (parentPointer != null) {
+            parents.add(Map.of(
+                    parentPointer.getName(), "/categories/" + parentPointer.getId().toString()
+            ));
+            parentPointer = parentPointer.getParent();
+        }
+        Collections.reverse(parents);
+        return parents;
+    }
 }
 
-// 상품 카테고리 예제 : 의류 쇼핑몰
 //브랜드의류 depth 1
-//  - parent : null
-//  - children : 브랜드 여성의류, 브랜드 남성의류, 브랜드 캐주얼의류
+//    - parent : null
+//    - children : 브랜드 여성의류, 브랜드 남성의류, 브랜드 캐주얼의류
 //브랜드 여성의류 depth 2
-//  - parent : 브랜드의류
-//  -children : null
+//     - parent : 브랜드의류
+//     - children : null
 //브랜드 남성의류 depth 2
-//  - parent : 브랜드의류
-//  -children : null
+//     - parent : 브랜드의류
+//     - children : null
 //브랜드 캐주얼의류 depth 2
-//  - parent : 브랜드의류
-//  -children : null
-
-//브랜드잡화 depth 1
-//브랜드 잡화
-//브랜드 쥬얼리//시계
-//수입명품
-
-//스포츠브랜드 depth 1
-//브랜드 아웃도어
-//브랜드 스포츠패션
+//     - parent : 브랜드의류
+//     - children : null
